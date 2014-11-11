@@ -1,0 +1,121 @@
+# fence
+
+Effortless way to avoid manual extern files when doing javascript
+interop from Clojurescript.
+
+![fence](http://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Fence_400px.jpg/220px-Fence_400px.jpg)
+
+From a *compromised* Clojurik dictionary:
+
+> *fence* (noun)
+
+> 1. a structure made of w̶o̶o̶d̶ ̶o̶r̶ ̶m̶e̶t̶a̶l̶ keystrokes etc that surrounds a
+>    piece of l̶a̶n̶d̶ code or prevents p̶e̶o̶p̶l̶e̶ ̶o̶r̶ ̶a̶n̶i̶m̶a̶l̶s̶ ̶f̶r̶o̶m̶ ̶e̶n̶t̶e̶r̶i̶n̶g̶
+>    ̶o̶r̶ ̶l̶e̶a̶v̶i̶n̶g̶ **javascript symbols** from getting renamed
+
+> 2. someone who b̶u̶y̶s̶ ̶a̶n̶d̶ ̶s̶e̶l̶l̶s̶ ̶s̶t̶o̶l̶e̶n̶ ̶g̶o̶o̶d̶s̶ uses macros from a
+>    library with stolen code in it
+
+> *fence* (verb)
+
+> 1. to put a̶ ̶f̶e̶n̶c̶e̶ parentheses around something
+
+> 2. to fight with a l̶o̶n̶g̶ ̶t̶h̶i̶n̶ ̶s̶w̶o̶r̶d̶ short line of dots as a s̶p̶o̶r̶t̶ way
+>    to cure headaches
+
+> 3. to answer someone's questions in a c̶l̶e̶v̶e̶r̶ lazy way in order to
+>    g̶e̶t̶ ̶a̶n̶ ̶a̶d̶v̶a̶n̶t̶a̶g̶e̶ ̶i̶n̶ ̶a̶n̶ ̶a̶r̶g̶u̶m̶e̶n̶t̶ answer in advance with an FAQs
+>    section in README.
+
+
+That random name is a complete mess ;)
+
+**Fence** provides a `fence.core/..` macro that can be used in place of its
+counterpart in core library. Use it for all your javascript interop forms
+to avoid adding extern files manually.
+
+## Installation
+
+Add `fence` to your Clojurescript project:
+
+```cljs
+[fence "0.1.0"]
+```
+```cljs
+(ns hello
+  "Calling property symbols that won't be renamed."
+  (:refer-clojure :exclude [..])
+  (:require-macros [fence.core :refer [..]]))
+```
+
+and replace all dot forms like `(. foo bar)`, `(.-bar foo )` and
+`(.bar foo)` with their `..` equivalent versions and you're done.
+
+## How it  works
+
+Imagine you have this piece of Clojurescript code:
+```clj
+(ns hello
+  "Calling property symbols that WILL be renamed."
+  )
+(->> (.. js/something -someAttributes aMethod (anotherMethod "arg1" "arg2"))
+     (.log js/console))
+```
+
+without extern file(s), the above code will end up with this:
+
+```js
+console.log(something.d.b().c("arg1", "arg2"));
+```
+which will fail to execute.
+
+Instead of writing some extern files manually, just refer to
+`fence.core/..` like this:
+
+```clj
+(ns hello
+  "Calling property symbols that won't be renamed."
+  (:refer-clojure :exclude [..])
+  (:require-macros [fence.core :refer [..]]))
+```
+and here's (part of) the result:
+
+```js
+console.log(function() {
+  var a;
+  a = something.someAttributes;
+  a = a.aMethod.call(a);
+  return a.anotherMethod.call(a, "arg1", "arg2");
+}());
+```
+
+Never be afraid of javascript interop again! ^^
+
+## FAQs
+
+1. Why no `.` macro?
+ - I tried to put the `fence.core`'s equivalent macro version of `.`
+   under the same name, but the Clojurescript compiler seems to ignore
+   the referred symbol `.` from `fence.core`.
+
+   You may still use `fence.core/dot` in place of `.` but it's kinda
+   lengthy and introduces "alien" code which is against `fence`'s
+   goals itself.
+
+2. Are there any performance pitfalls?
+ - No. Google Closure compiler will replace string versions of
+   properties to symbol versions so the final javascript will be the
+   same as its counterpart using *extern* files.
+
+3. Isn't it better to write code like this? `(.. foo (a-method arg-1 arg-2))`
+ - `fence` will never camelize symbols for you because it aims to be
+   100% compatible with `clojure.core/..`. Once Clojurescript compiler
+   is smart enough to be able to automatically produce extern files
+   itself, people can come back to `clojure.core/..` from
+   `fence.core/..` with no extra effort.
+
+## Copyright
+
+Copyright ©2014 Hoang Minh Thang
+
+Distributed under the Eclipse Public License, the same as Clojure. Please see the `epl-v10.html` file at the top level of this repo.
