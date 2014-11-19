@@ -5,7 +5,11 @@ interop from Clojurescript.
 
 ![fence](http://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Fence_400px.jpg/220px-Fence_400px.jpg)
 
-From a *compromised* Clojurik dictionary:
+
+From a **compromised** Clojurik dictionary:
+
+(Warning: This section is just for fun. Feel free to skip to main
+documentation ahead.)
 
 > *fence* (noun)
 
