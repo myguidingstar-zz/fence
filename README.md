@@ -112,6 +112,28 @@ and here's (part of) the result:
 
 Never be afraid of javascript interop again! ^^
 
+### More in-depth technical details:
+
+|-----------------------+---------------------------+------------------------------------------------+-------------------|
+| Clojurescript forms   | Output javascript         | Optimized in :advanced mode                    | Optimized         |
+|                       |                           | without extern                                 | with extern       |
+|-----------------------+---------------------------+------------------------------------------------+-------------------|
+| `(. js/foo bar)`      | `foo.bar`                 | renamed to a shorter name like `foo.a`         | `foo.bar`         |
+| `(.-boo js/foo )`     | `foo.boo`                 | renamed to a shorter name like `foo.b`         | `foo.boo`         |
+| `(.bla js/foo)`       | `foo.bla()`               | renamed to a shorter name like `foo.c()`       | `foo.bla()`       |
+| `(.bla js/foo "x" 1)` | `foo.bla("x", 1)`         | renamed to a shorter name like `foo.d("x", 1)` | `foo.bla("x", 1)` |
+|-----------------------+---------------------------+------------------------------------------------+-------------------|
+
+|------------------------------------+--------------------------------+-----------------------------|
+| Clojurescript forms                | Output javascript              | Optimized                   |
+| (`..` resolves to `fence.core/..`) |                                | with/without extern         |
+|------------------------------------+--------------------------------+-----------------------------|
+| `(.. js/foo bar)`                  | `foo["bar"]`                   | `foo.bar`                   |
+| `(.. js/foo -boo)`                 | `foo["boo"]`                   | `foo.boo`                   |
+| `(.. js/foo bla)`                  | `foo["bla"].call(foo)`         | `foo.bla.call(foo)`         |
+| `(.. js/foo (bla "x" 1))`          | `foo["bla"].call(foo, "x", 1)` | `foo.bla.call(foo, "x", 1)` |
+|------------------------------------+--------------------------------+-----------------------------|
+
 ## FAQs
 
 1. Why no `.` macro?
