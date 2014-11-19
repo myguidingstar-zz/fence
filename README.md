@@ -45,6 +45,8 @@ Add `fence` to your Clojurescript project:
 ```cljs
 [fence "0.1.0"]
 ```
+Refer to `fence.core/..` in your namespace:
+
 ```cljs
 (ns hello
   "Calling property symbols that won't be renamed."
@@ -52,8 +54,23 @@ Add `fence` to your Clojurescript project:
   (:require-macros [fence.core :refer [..]]))
 ```
 
-and replace all dot forms like `(. foo bar)`, `(.-bar foo )` and
-`(.bar foo)` with their `..` equivalent versions and you're done.
+and replace all renaming-sensitive forms in column 1 with their `..`
+equivalent versions demonstrated in column 2
+
+|----------------------------+---------------------------------------------|
+| forms that requires extern | forms that works without extern             |
+|                            | as long as `..` resolves to `fence.core/..` |
+|----------------------------+---------------------------------------------|
+| `(. js/foo bar)`           | `(.. js/foo -bar)`                          |
+| `(.-boo js/foo )`          | `(.. js/foo -boo)`                          |
+| `(.bla js/foo)`            | `(.. js/foo bla)`                           |
+| `(.bla js/foo x y z)`      | `(.. js/foo (bla x y z))`                   |
+|----------------------------+---------------------------------------------|
+
+and you're done. Of course, existing `..` forms don't need to be changed.
+
+**Remember**: only `fence.core/..` ensures the property/method symbols
+inside it won't get renamed.
 
 ## How it  works
 
