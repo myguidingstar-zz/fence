@@ -75,18 +75,18 @@ inside it won't get renamed.
 ## How it  works
 
 Imagine you have this piece of Clojurescript code:
+
 ```clj
 (ns hello
   "Calling property symbols that WILL be renamed."
   )
-(->> (.. js/something -someAttributes aMethod (anotherMethod "arg1" "arg2"))
-     (.log js/console))
+(.. js/something -someAttributes aMethod (anotherMethod "arg1" "arg2"))
 ```
 
 without extern file(s), the above code will end up with this:
 
 ```js
-console.log(something.d.b().c("arg1", "arg2"));
+something.d.b().c("arg1", "arg2");
 ```
 which will fail to execute.
 
@@ -102,12 +102,12 @@ Instead of writing some extern files manually, just refer to
 and here's (part of) the result:
 
 ```js
-console.log(function() {
+(function() {
   var a;
   a = something.someAttributes;
   a = a.aMethod.call(a);
   return a.anotherMethod.call(a, "arg1", "arg2");
-}());
+})();
 ```
 
 Never be afraid of javascript interop again! ^^
