@@ -57,15 +57,12 @@ Refer to `fence.core/..` in your namespace:
 and replace all renaming-sensitive forms in column 1 with their `..`
 equivalent versions demonstrated in column 2
 
-|----------------------------+---------------------------------------------|
-| forms that requires extern | forms that works without extern             |
-|                            | as long as `..` resolves to `fence.core/..` |
-|----------------------------+---------------------------------------------|
-| `(. js/foo bar)`           | `(.. js/foo -bar)`                          |
-| `(.-boo js/foo )`          | `(.. js/foo -boo)`                          |
-| `(.bla js/foo)`            | `(.. js/foo bla)`                           |
-| `(.bla js/foo x y z)`      | `(.. js/foo (bla x y z))`                   |
-|----------------------------+---------------------------------------------|
+forms that requires extern | forms that works without extern as long as `..` resolves to `fence.core/..`
+-------------------------- | -------------------------------------------
+`(. js/foo bar)`           | `(.. js/foo -bar)`
+`(.-boo js/foo )`          | `(.. js/foo -boo)`
+`(.bla js/foo)`            | `(.. js/foo bla)`
+`(.bla js/foo x y z)`      | `(.. js/foo (bla x y z))`
 
 and you're done. Of course, existing `..` forms don't need to be changed.
 
@@ -114,25 +111,22 @@ Never be afraid of javascript interop again! ^^
 
 ### More in-depth technical details:
 
-|-----------------------+---------------------------+------------------------------------------------+-------------------|
-| Clojurescript forms   | Output javascript         | Optimized in :advanced mode                    | Optimized         |
-|                       |                           | without extern                                 | with extern       |
-|-----------------------+---------------------------+------------------------------------------------+-------------------|
-| `(. js/foo bar)`      | `foo.bar`                 | renamed to a shorter name like `foo.a`         | `foo.bar`         |
-| `(.-boo js/foo )`     | `foo.boo`                 | renamed to a shorter name like `foo.b`         | `foo.boo`         |
-| `(.bla js/foo)`       | `foo.bla()`               | renamed to a shorter name like `foo.c()`       | `foo.bla()`       |
-| `(.bla js/foo "x" 1)` | `foo.bla("x", 1)`         | renamed to a shorter name like `foo.d("x", 1)` | `foo.bla("x", 1)` |
-|-----------------------+---------------------------+------------------------------------------------+-------------------|
 
-|------------------------------------+--------------------------------+-----------------------------|
-| Clojurescript forms                | Output javascript              | Optimized                   |
-| (`..` resolves to `fence.core/..`) |                                | with/without extern         |
-|------------------------------------+--------------------------------+-----------------------------|
-| `(.. js/foo bar)`                  | `foo["bar"]`                   | `foo.bar`                   |
-| `(.. js/foo -boo)`                 | `foo["boo"]`                   | `foo.boo`                   |
-| `(.. js/foo bla)`                  | `foo["bla"].call(foo)`         | `foo.bla.call(foo)`         |
-| `(.. js/foo (bla "x" 1))`          | `foo["bla"].call(foo, "x", 1)` | `foo.bla.call(foo, "x", 1)` |
-|------------------------------------+--------------------------------+-----------------------------|
+Clojurescript forms   | Output javascript         | Optimized in :advanced mode without extern     | Optimized with extern
+----------------------|---------------------------|------------------------------------------------|-------------------
+`(. js/foo bar)`      | `foo.bar`                 | renamed to a shorter name like `foo.a`         | `foo.bar`
+`(.-boo js/foo )`     | `foo.boo`                 | renamed to a shorter name like `foo.b`         | `foo.boo`
+`(.bla js/foo)`       | `foo.bla()`               | renamed to a shorter name like `foo.c()`       | `foo.bla()`
+`(.bla js/foo "x" 1)` | `foo.bla("x", 1)`         | renamed to a shorter name like `foo.d("x", 1)` | `foo.bla("x", 1)`
+
+
+Clojurescript forms (`..` resolves to `fence.core/..`) | Output javascript              | Optimized with/without extern
+-------------------------------------------------------|--------------------------------|-----------------------------
+`(.. js/foo bar)`                                      | `foo["bar"]`                   | `foo.bar`
+`(.. js/foo -boo)`                                     | `foo["boo"]`                   | `foo.boo`
+`(.. js/foo bla)`                                      | `foo["bla"].call(foo)`         | `foo.bla.call(foo)`
+`(.. js/foo (bla "x" 1))`                              | `foo["bla"].call(foo, "x", 1)` | `foo.bla.call(foo, "x", 1)`
+
 
 ## FAQs
 
