@@ -1,5 +1,7 @@
 (ns fence.core
-  (:refer-clojure :exclude [..]))
+  (:refer-clojure :exclude [..])
+  (:require [clojure.walk :refer [prewalk]]
+            [clojure.core.match :refer [match]]))
 
 (defmacro dot
   "Alternative macro version of Clojurescript special form `.`. Will
