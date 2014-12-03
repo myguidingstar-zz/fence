@@ -46,3 +46,21 @@
   [attr|method]
   (->> attr|method name rest
        (apply str) symbol))
+
+(defn expand-interop-form
+  "Expands regular Clojurescript interop forms to Fence's equivalent."
+  [form]
+  (match form
+         (['. & xs] :seq)
+         `(fence.core/dot ~@xs)
+
+         ([(:or '.. 'clojure.core/..) & xs] :seq)
+         `(fence.core/.. ~@xs)
+
+         ([(attr :guard attr?) obj] :seq)
+         `(fence.core/dot ~obj ~(interop-form-for-dot attr))
+
+         ([(method :guard method?) obj & xs] :seq)
+         `(fence.core/dot ~obj ~(interop-form-for-dot method) ~@xs)
+
+         :else form))
