@@ -37,3 +37,7 @@
 (defn attr? [sym]
   (and (symbol? sym)
        (.startsWith (name sym) ".-")))
+
+(defn method? [sym]
+  (and (symbol? sym)
+       (.startsWith (name sym) ".")))
