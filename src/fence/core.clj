@@ -33,3 +33,7 @@
   macro to avoid manual extern files."
   ([x form] `(dot ~x ~form))
   ([x form & more] `(.. (dot ~x ~form) ~@more)))
+
+(defn attr? [sym]
+  (and (symbol? sym)
+       (.startsWith (name sym) ".-")))
