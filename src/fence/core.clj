@@ -41,3 +41,8 @@
 (defn method? [sym]
   (and (symbol? sym)
        (.startsWith (name sym) ".")))
+
+(defn interop-form-for-dot
+  [attr|method]
+  (->> attr|method name rest
+       (apply str) symbol))
