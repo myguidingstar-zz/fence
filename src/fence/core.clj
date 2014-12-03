@@ -64,3 +64,8 @@
          `(fence.core/dot ~obj ~(interop-form-for-dot method) ~@xs)
 
          :else form))
+
+(defn expand-all-interop-forms
+  "Expands regular Clojurescript interop forms to Fence's equivalent."
+  [form]
+  (prewalk expand-interop-form form))
