@@ -52,7 +52,7 @@ Refer to `fence.core/+++` in your namespace:
 ```cljs
 (ns hello
   "Calling property symbols that won't be renamed."
-  (:require [fence.core :refer-macros [+++]]))
+  (:require-macros [fence.core :refer [+++]]))
 ```
 
 and wrap all renaming-sensitive forms inside `fence.core/+++` which
