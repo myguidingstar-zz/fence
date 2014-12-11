@@ -140,26 +140,15 @@ Clojurescript forms             | Output javascript              | Optimized wit
 
 ## FAQs
 
-1. Why no `.` macro?
- - I tried to put the `fence.core`'s equivalent macro version of `.`
-   under the same name, but the Clojurescript compiler seems to ignore
-   the referred symbol `.` from `fence.core`.
-
-   You may still use `fence.core/dot` in place of `.` but it's kinda
-   lengthy and introduces "alien" code which is against `fence`'s
-   goals itself.
+1. Why not a reader macro?
+ - I definitely want to but Clojurescript doesn't provide a
+ convenient, sharable way to make reader macros like Clojure with
+ `data_readers.clj`.
 
 2. Are there any performance pitfalls?
  - No. Google Closure compiler will replace string versions of
    properties to symbol versions so the final javascript will be the
    same as its counterpart using *extern* files.
-
-3. Isn't it better to write code like this? `(.. foo (a-method arg-1 arg-2))`
- - `fence` will never camelize symbols for you because it aims to be
-   100% compatible with `clojure.core/..`. Once Clojurescript compiler
-   is smart enough to be able to automatically produce extern files
-   itself, people can come back to `clojure.core/..` from
-   `fence.core/..` with no extra effort.
 
 ## Copyright
 
