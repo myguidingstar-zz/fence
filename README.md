@@ -3,13 +3,12 @@
 Effortless way to avoid manual extern files when doing javascript
 interop from Clojurescript.
 
-![fence](http://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Fence_400px.jpg/220px-Fence_400px.jpg)
-
-
 From a **compromised** Clojurik dictionary:
 
 (Warning: This section is just for fun. Feel free to skip to main
 documentation ahead.)
+
+<img align="right" width="300" src="http://i1.kym-cdn.com/photos/images/original/000/412/815/2be.jpg">
 
 > *fence* (noun)
 
@@ -19,6 +18,8 @@ documentation ahead.)
 
 > 2. someone who b̶u̶y̶s̶ ̶a̶n̶d̶ ̶s̶e̶l̶l̶s̶ ̶s̶t̶o̶l̶e̶n̶ ̶g̶o̶o̶d̶s̶ uses macros from a
 >    library with stolen code in it
+
+<img align="right" width="300" src="http://imgs.xkcd.com/comics/compiling.png">
 
 > *fence* (verb)
 
