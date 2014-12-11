@@ -69,3 +69,10 @@
   "Expands regular Clojurescript interop forms to Fence's equivalent."
   [form]
   (prewalk expand-interop-form form))
+
+(defmacro +++
+  "The fence macro. Works the same as Clojure's `do` special form
+  except that it will prevent symbols in interop forms inside from
+  getting renamed by Closure compiler."
+  [& body]
+  (expand-all-interop-forms `(do ~@body)))
