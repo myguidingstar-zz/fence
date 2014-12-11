@@ -35,9 +35,10 @@ documentation ahead.)
 
 That random name is a complete mess ;)
 
-**Fence** provides a `fence.core/..` macro that can be used in place of its
-counterpart in core library. Use it for all your javascript interop forms
-to avoid adding extern files manually.
+**Fence** provides a `fence.core/+++` macro that works like `do`
+special form. Wrap it around all your javascript interop forms to
+transform them automatically so you don't have to add extern files
+manually.
 
 ## Installation
 
