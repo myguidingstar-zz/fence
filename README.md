@@ -40,36 +40,41 @@ special form. Wrap it around all your javascript interop forms to
 transform them automatically so you don't have to add extern files
 manually.
 
-## Installation
+## Usage
 
 Add `fence` to your Clojurescript project:
 
 ```cljs
-[fence "0.1.0"]
+[fence "0.2.0"]
 ```
-Refer to `fence.core/..` in your namespace:
+Refer to `fence.core/+++` in your namespace:
 
 ```cljs
 (ns hello
   "Calling property symbols that won't be renamed."
-  (:refer-clojure :exclude [..])
-  (:require-macros [fence.core :refer [..]]))
+  (:require [fence.core :refer-macros [+++]]))
 ```
 
-and replace all renaming-sensitive forms in column 1 with their `..`
-equivalent versions demonstrated in column 2
+and wrap all renaming-sensitive forms inside `fence.core/+++` which
+works like `do` special form.
 
-forms that requires extern | forms that works without extern as long as `..` resolves to `fence.core/..`
+forms that requires extern | forms that works without extern
 -------------------------- | -------------------------------------------
-`(. js/foo bar)`           | `(.. js/foo -bar)`
-`(.-boo js/foo )`          | `(.. js/foo -boo)`
-`(.bla js/foo)`            | `(.. js/foo bla)`
-`(.bla js/foo x y z)`      | `(.. js/foo (bla x y z))`
+`(. js/foo bar)`           | `(+++ (.. js/foo -bar))`
+`(.-boo js/foo)`           | `(+++ (.. js/foo -boo))`
+`(.bla js/foo)`            | `(+++ (.. js/foo bla))`
+`(.bla js/foo x y z)`      | `(+++ (.. js/foo (bla x y z)))`
 
-and you're done. Of course, existing `..` forms don't need to be changed.
+Please note `+++` use `clojure.walk` to transform all interop forms
+inside its body so the following should work too:
 
-**Remember**: only `fence.core/..` ensures the property/method symbols
-inside it won't get renamed.
+```clj
+(defn foo []
+  (+++
+    (.-bar js/foo)
+    (.moreForms js/foo)
+    (at (any (level (.execute js/foo))))))
+```
 
 ## How it  works
 
@@ -89,14 +94,15 @@ something.d.b().c("arg1", "arg2");
 ```
 which will fail to execute.
 
-Instead of writing some extern files manually, just refer to
-`fence.core/..` like this:
+Instead of writing some extern files manually, just wrap that sensitive
+form inside `fence.core/+++` like this:
 
 ```clj
 (ns hello
   "Calling property symbols that won't be renamed."
-  (:refer-clojure :exclude [..])
-  (:require-macros [fence.core :refer [..]]))
+  (:require-macros [fence.core :refer [+++]]))
+
+(+++ (.. js/something -someAttributes aMethod (anotherMethod "arg1" "arg2")))
 ```
 and here's (part of) the result:
 
