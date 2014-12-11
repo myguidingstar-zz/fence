@@ -119,6 +119,9 @@ Never be afraid of javascript interop again! ^^
 
 ### More in-depth technical details:
 
+`fence.core/+++` transforms all interop forms found in its body code
+into `fence.core/dot` and `fence.core/..` macros (`fence` version of `.` and
+`..`) which in turn will expand to `aget` forms.
 
 Clojurescript forms   | Output javascript         | Optimized in :advanced mode without extern     | Optimized with extern
 ----------------------|---------------------------|------------------------------------------------|-------------------
@@ -128,13 +131,12 @@ Clojurescript forms   | Output javascript         | Optimized in :advanced mode 
 `(.bla js/foo "x" 1)` | `foo.bla("x", 1)`         | renamed to a shorter name like `foo.d("x", 1)` | `foo.bla("x", 1)`
 
 
-Clojurescript forms (`..` resolves to `fence.core/..`) | Output javascript              | Optimized with/without extern
--------------------------------------------------------|--------------------------------|-----------------------------
-`(.. js/foo bar)`                                      | `foo["bar"]`                   | `foo.bar`
-`(.. js/foo -boo)`                                     | `foo["boo"]`                   | `foo.boo`
-`(.. js/foo bla)`                                      | `foo["bla"].call(foo)`         | `foo.bla.call(foo)`
-`(.. js/foo (bla "x" 1))`                              | `foo["bla"].call(foo, "x", 1)` | `foo.bla.call(foo, "x", 1)`
-
+Clojurescript forms             | Output javascript              | Optimized with/without extern
+--------------------------------|--------------------------------|-----------------------------
+`(+++ (.. js/foo bar))`         | `foo["bar"]`                   | `foo.bar`
+`(+++ (.. js/foo -boo))`        | `foo["boo"]`                   | `foo.boo`
+`(+++ (.. js/foo bla))`         | `foo["bla"].call(foo)`         | `foo.bla.call(foo)`
+`(+++ (.. js/foo (bla "x" 1)))` | `foo["bla"].call(foo, "x", 1)` | `foo.bla.call(foo, "x", 1)`
 
 ## FAQs
 
